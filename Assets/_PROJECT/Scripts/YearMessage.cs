@@ -1,22 +1,19 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 public class YearMessage : MonoBehaviour
 {
-    public TMP_Text welcomeText; // Hoşgeldin mesajı için UI Text
+    [SerializeField] private TMP_Text welcomeText;
 
     private void OnEnable()
     {
-        TimeManager.OnYearPassed += ShowWelcomeMessage; // Event dinleyiciyi ekle
+        TimeManager.OnYearPassed += ShowWelcomeMessage; 
     }
-
     private void OnDisable()
     {
-        TimeManager.OnYearPassed -= ShowWelcomeMessage; // Event dinleyiciyi çıkar
+        TimeManager.OnYearPassed -= ShowWelcomeMessage;
     }
-
     private void ShowWelcomeMessage(int year)
     {
-        welcomeText.text = $"Hoşgeldin {year:D4}"; // 0000 formatında yıl
+        welcomeText.text = $"Hosgeldin {year:D4}";
     }
 }

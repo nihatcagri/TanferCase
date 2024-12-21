@@ -1,38 +1,49 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 public class TimeManager : MonoBehaviour
 {
-    public TMP_Text timeText; // Oyun içindeki zaman için UI Text
-    public static event Action<int> OnYearPassed; // Yıl geçtiğinde tetiklenecek event
-
-    private float elapsedTime = 0f; // Geçen zamanı hesaplar
-    private int year = 0; // Yıl sayacı
-    private int month = 0; // Ay sayacı
+    [SerializeField] private TMP_Text timeText; 
+    public static event Action<int> OnYearPassed; 
+    
+    private float elapsedTime = 0f; 
+    private int year = 0; 
+    private int month = 0;
 
     private void Update()
     {
         elapsedTime += Time.deltaTime;
 
-        if (elapsedTime >= 0.5f) // 0.5 saniye bir ay
+        if (elapsedTime >= 0.5f) 
         {
-            elapsedTime = 0f; // Zamanı sıfırla
+            elapsedTime = 0f; 
             month++;
+            AudioManager.Instance.PlaySound(0);
 
-            if (month > 12) // Yeni yıla geçiş
+            if (month > 12) 
             {
-                month = 1; // Ayı sıfırla
-                year++; // Yılı artır
-                OnYearPassed?.Invoke(year); // Eventi tetikle
+                month = 1;
+                year++; 
+                ParticleManager.Instance.FlashParticle();
+                AudioManager.Instance.PlaySound(2);
+                OnYearPassed?.Invoke(year); 
             }
 
-            UpdateTimeUI(); // UI güncelle
+            UpdateTimeUI();
         }
     }
 
+    public void ResetTime() 
+    {
+        year = 0;
+        month = 0;
+        elapsedTime = 0f; 
+        OnYearPassed?.Invoke(year); 
+        UpdateTimeUI();
+        AudioManager.Instance.PlaySound(1);
+    }
     private void UpdateTimeUI()
     {
-        timeText.text = $"{year:D4}.{month:D2}"; // 0000.00 formatında göster
+        timeText.text = $"{year:D4}.{month:D2}";
     }
 }
